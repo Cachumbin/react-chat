@@ -6,9 +6,18 @@ import "firebase/auth"
 
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useCollectionData } from "react-firebase-hooks/firestore"
+import dotenv from "dotenv"
+
+dotenv.config()
 
 firebase.initializeApp({
-  // Your firebase config
+  apiKey: process.env.apiKey,
+  authDomain: process.env.authDomain,
+  projectId: process.env.projectId,
+  storageBucket: process.env.storageBucket,
+  messagingSenderId: process.env.messagingSenderId,
+  appId: process.env.appId,
+  measurementId: process.env.measurementId,
 })
 
 const auth = firebase.auth()
