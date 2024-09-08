@@ -23,6 +23,23 @@ firebase.initializeApp({
 const auth = firebase.auth()
 const firestore = firebase.firestore()
 
+const SignIn = ({}) => {
+  const useSignInWithGoogle = () => {
+      const provider = new firebase.auth.GoogleAuthProvider()
+      auth.signInWithPopup(provider)
+  }
+
+return (
+  <button onClick={useSignInWithGoogle}>Sign in with Google</button>
+)
+}
+
+const SignOut = () => {
+  return auth.currentUser && (
+    <button onClick={() => auth.signOut()}>Sign Out</button>
+  )
+}
+
 const App = () => {
 
   const [user] = useAuthState(auth)
