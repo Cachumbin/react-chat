@@ -1,6 +1,9 @@
 import "./App.css"
 
 import firebase from "firebase/app"
+import { initializeApp } from "firebase/app"
+import { getFirestore } from "firebase/firestore"
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import "firebase/firestore"
 import "firebase/auth"
 
@@ -37,6 +40,29 @@ return (
 const SignOut = () => {
   return auth.currentUser && (
     <button onClick={() => auth.signOut()}>Sign Out</button>
+  )
+}
+
+const ChatRoom = () => {
+  const messagesRef = firestore.collection("messages")
+  const query = messagesRef.orderBy("createdAt").limit(25)
+
+  const [messages] = useCollectionData(query, { idField: "id" } as any)
+
+  return (
+    <>
+      <div>
+        {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
+      </div>
+    </>
+  )
+}
+
+const ChatMessage = ({ message }) => {
+  const { text, uid } = message
+
+  return (
+    <p>{text}</p>
   )
 }
 
