@@ -57,13 +57,14 @@ const ChatRoom = () => {
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { uid, photoURL } = auth.currentUser!;
+    const { uid, photoURL, displayName } = auth.currentUser!;
 
     await addDoc(messagesRef, {
       text: formValue,
       createdAt: serverTimestamp(),
       uid,
       photoURL,
+      displayName,
     });
 
     setFormValue("");
@@ -96,12 +97,18 @@ const ChatRoom = () => {
 };
 
 const ChatMessage = ({ message }: { message: any }) => {
-  const { text, createdAt } = message;
+  const { text, photoURL, displayName, createdAt } = message;
 
   return (
     <div>
-      <p>{text}</p>
-      <span>{createdAt?.toDate().toString()}</span>
+      <img src={photoURL} alt="Avatar" />
+      <div>
+        <p>
+          <strong>{displayName}</strong>
+        </p>
+        <p>{text}</p>
+        <span>{createdAt?.toDate().toString()}</span>
+      </div>
     </div>
   );
 };
