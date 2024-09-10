@@ -1,4 +1,5 @@
 import "./App.css";
+import { useState } from "react";
 import { initializeApp } from "firebase/app";
 import {
   getFirestore,
@@ -15,6 +16,7 @@ import {
 } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import { addDoc, serverTimestamp } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "",
@@ -49,20 +51,59 @@ const ChatRoom = () => {
   const messagesRef = collection(firestore, "messages");
   const q = query(messagesRef, orderBy("createdAt"), limit(25));
 
-  const [messages] = useCollectionData(q);
+  const [messages, loading, error] = useCollectionData(q);
+  const [formValue, setFormValue] = useState("");
+
+  const sendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const { uid, photoURL } = auth.currentUser!;
+
+    await addDoc(messagesRef, {
+      text: formValue,
+      createdAt: serverTimestamp(),
+      uid,
+      photoURL,
+    });
+
+    setFormValue("");
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div>
-      {messages &&
-        messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
+      <div>
+        {messages &&
+          messages.map((msg, index) => (
+            <ChatMessage key={index} message={msg} />
+          ))}
+      </div>
+
+      <form onSubmit={sendMessage}>
+        <input
+          value={formValue}
+          onChange={(e) => setFormValue(e.target.value)}
+          placeholder="Type your message"
+        />
+        <button type="submit" disabled={!formValue}>
+          Send
+        </button>
+      </form>
     </div>
   );
 };
 
 const ChatMessage = ({ message }: { message: any }) => {
-  const { text } = message;
+  const { text, createdAt } = message;
 
-  return <p>{text}</p>;
+  return (
+    <div>
+      <p>{text}</p>
+      <span>{createdAt?.toDate().toString()}</span>
+    </div>
+  );
 };
 
 const App = () => {
