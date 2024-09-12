@@ -6,22 +6,50 @@ import {
   limit,
   addDoc,
   serverTimestamp,
+  DocumentData,
+  Query,
 } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { auth, firestore } from "./firebaseConfig";
 import ChatMessage from "./ChatMessage";
 
+interface MessageProps {
+  text: string;
+  createdAt: any;
+  uid: string;
+  photoURL: string;
+  displayName: string;
+  fileURL?: string;
+}
+
 const ChatRoom: React.FC = () => {
   const messagesRef = collection(firestore, "messages");
-  const q = query(messagesRef, orderBy("createdAt"), limit(25));
+  const q: Query<DocumentData> = query(
+    messagesRef,
+    orderBy("createdAt"),
+    limit(25)
+  );
 
-  const [messages, loading, error] = useCollectionData(q);
+  const [messages, loading, error] = useCollectionData<MessageProps>(q, {
+    idField: "id",
+  });
+
   const [formValue, setFormValue] = useState("");
+  const [file, setFile] = useState<File | null>(null);
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const { uid, photoURL, displayName } = auth.currentUser!;
+
+    let fileURL = null;
+    if (file) {
+      const storage = getStorage();
+      const fileRef = ref(storage, `uploads/${file.name}`);
+      await uploadBytes(fileRef, file);
+      fileURL = await getDownloadURL(fileRef);
+    }
 
     await addDoc(messagesRef, {
       text: formValue,
@@ -29,9 +57,11 @@ const ChatRoom: React.FC = () => {
       uid,
       photoURL,
       displayName,
+      fileURL,
     });
 
     setFormValue("");
+    setFile(null);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -52,7 +82,11 @@ const ChatRoom: React.FC = () => {
           onChange={(e) => setFormValue(e.target.value)}
           placeholder="Type your message"
         />
-        <button type="submit" disabled={!formValue}>
+        <input
+          type="file"
+          onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+        />
+        <button type="submit" disabled={!formValue && !file}>
           Send
         </button>
       </form>
