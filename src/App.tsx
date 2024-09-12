@@ -9,7 +9,7 @@ const App = () => {
   const [user] = useAuthState(auth);
 
   return (
-    <div className="w-[600px] flex flex-col">
+    <div className="max-w-2xl flex flex-col">
       <header className="bg-gradient-to-r from-pink-500 to-yellow-500 flex justify-between">
         <p className="m-6 text-2xl font-bold text-white">CachunChat</p>
         <SignOut />

@@ -15,7 +15,8 @@ interface MessageProps {
 const ChatMessage: React.FC<MessageProps> = ({ message }) => {
   const { text, uid, photoURL, displayName, fileURL } = message;
 
-  const messageClass = uid === auth.currentUser?.uid ? "sent" : "received";
+  const messageClass =
+    uid === auth.currentUser?.uid ? "flex-row-reverse" : "justify-start";
 
   return (
     <div className={`message ${messageClass} flex items-end`}>
@@ -26,17 +27,15 @@ const ChatMessage: React.FC<MessageProps> = ({ message }) => {
           alt="User avatar"
         />
       )}
-      <div className="flex flex-col bg-pink-500 rounded-xl mx-2 my-4 p-2 text-white">
+      <div
+        className={`${messageClass} flex flex-col bg-pink-500 rounded-xl mx-2 my-4 p-2 text-white max-w-xl`}
+      >
         <p className="font-bold mb-1">{displayName}</p>
-        <p className="">{text}</p>
+        <p className="w-auto break-words break-all">{text}</p>
         {fileURL && (
           <div>
             <a href={fileURL} target="_blank" rel="noopener noreferrer">
-              <img
-                src={fileURL}
-                alt="Uploaded file"
-                style={{ maxWidth: "500px" }}
-              />
+              <img className="w-auto" src={fileURL} alt="Uploaded file" />
             </a>
           </div>
         )}
