@@ -15,8 +15,17 @@ interface MessageProps {
 const ChatMessage: React.FC<MessageProps> = ({ message }) => {
   const { text, uid, photoURL, displayName, fileURL } = message;
 
-  const messageClass =
-    uid === auth.currentUser?.uid ? "flex-row-reverse" : "justify-start";
+  // Determine if the message is sent by the current user
+  const isSentByCurrentUser = uid === auth.currentUser?.uid;
+
+  // Class for the message alignment
+  const messageClass = isSentByCurrentUser
+    ? "flex-row-reverse"
+    : "justify-start";
+
+  // Conditional classes for sent vs received messages
+  const backgroundColor = isSentByCurrentUser ? "bg-pink-500" : "bg-yellow-300";
+  const textColor = isSentByCurrentUser ? "text-white" : "text-gray-800";
 
   return (
     <div className={`message ${messageClass} flex items-end`}>
@@ -28,7 +37,7 @@ const ChatMessage: React.FC<MessageProps> = ({ message }) => {
         />
       )}
       <div
-        className={`${messageClass} flex flex-col bg-pink-500 rounded-xl mx-2 my-4 p-2 text-white max-w-xl`}
+        className={`${messageClass} flex flex-col ${backgroundColor} rounded-xl mx-2 my-4 p-2 ${textColor} max-w-xl`}
       >
         <p className="font-bold mb-1">{displayName}</p>
         <p className="w-auto break-words break-all">{text}</p>

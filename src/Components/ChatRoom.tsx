@@ -8,6 +8,7 @@ import {
   serverTimestamp,
   DocumentData,
   Query,
+  FirestoreDataConverter,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -23,18 +24,41 @@ interface MessageProps {
   fileURL?: string;
 }
 
+const messageConverter: FirestoreDataConverter<MessageProps> = {
+  toFirestore(message: MessageProps): DocumentData {
+    return {
+      text: message.text,
+      createdAt: message.createdAt,
+      uid: message.uid,
+      photoURL: message.photoURL,
+      displayName: message.displayName,
+      fileURL: message.fileURL || null,
+    };
+  },
+  fromFirestore(snapshot): MessageProps {
+    const data = snapshot.data();
+    return {
+      text: data.text,
+      createdAt: data.createdAt,
+      uid: data.uid,
+      photoURL: data.photoURL,
+      displayName: data.displayName,
+      fileURL: data.fileURL || null,
+    };
+  },
+};
+
 const ChatRoom: React.FC = () => {
-  const messagesRef = collection(firestore, "messages");
-  const q: Query<DocumentData> = query(
+  const messagesRef = collection(firestore, "messages").withConverter(
+    messageConverter
+  );
+  const query1: Query<MessageProps> = query(
     messagesRef,
     orderBy("createdAt"),
     limit(25)
   );
 
-  const [messages, loading, error] = useCollectionData<MessageProps>(q, {
-    idField: "id",
-  });
-
+  const [messages, loading, error] = useCollectionData<MessageProps>(query1);
   const [formValue, setFormValue] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
@@ -51,14 +75,23 @@ const ChatRoom: React.FC = () => {
       fileURL = await getDownloadURL(fileRef);
     }
 
-    await addDoc(messagesRef, {
+    const safePhotoURL = photoURL || "";
+
+    const safeDisplayName = displayName || undefined;
+
+    const messageData: Partial<MessageProps> = {
       text: formValue,
       createdAt: serverTimestamp(),
       uid,
-      photoURL,
-      displayName,
-      fileURL,
-    });
+      photoURL: safePhotoURL,
+      displayName: safeDisplayName,
+    };
+
+    if (fileURL) {
+      messageData.fileURL = fileURL;
+    }
+
+    await addDoc(messagesRef, messageData);
 
     setFormValue("");
     setFile(null);
