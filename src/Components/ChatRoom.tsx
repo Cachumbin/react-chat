@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   collection,
   query,
@@ -13,9 +12,8 @@ import {
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { auth, firestore } from "./firebaseConfig";
-import { GrAttachment } from "react-icons/gr";
-import { TbSend2 } from "react-icons/tb";
 import ChatMessage from "./ChatMessage";
+import MessageForm from "./MessageForm";
 
 interface MessageProps {
   text: string;
@@ -61,12 +59,8 @@ const ChatRoom: React.FC = () => {
   );
 
   const [messages, loading, error] = useCollectionData<MessageProps>(query1);
-  const [formValue, setFormValue] = useState("");
-  const [file, setFile] = useState<File | null>(null);
 
-  const sendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const sendMessage = async (message: string, file: File | null) => {
     const { uid, photoURL, displayName } = auth.currentUser!;
 
     let fileURL = null;
@@ -82,7 +76,7 @@ const ChatRoom: React.FC = () => {
     const safeDisplayName = displayName || undefined;
 
     const messageData: Partial<MessageProps> = {
-      text: formValue,
+      text: message,
       createdAt: serverTimestamp(),
       uid,
       photoURL: safePhotoURL,
@@ -94,50 +88,21 @@ const ChatRoom: React.FC = () => {
     }
 
     await addDoc(messagesRef, messageData);
-
-    setFormValue("");
-    setFile(null);
   };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div>
-      <div>
+    <div className="flex flex-col h-screen">
+      <div className="flex-grow overflow-y-auto p-4">
         {messages &&
           messages.map((msg, index) => (
             <ChatMessage key={index} message={msg} />
           ))}
       </div>
 
-      <div className="flex flex-col">
-        {file && (
-          <span className="bg-white text-sm text-gray-600 p-2">
-            {file.name}
-          </span>
-        )}
-        <form className="w-2-xl flex bg-white p-2" onSubmit={sendMessage}>
-          <input
-            className="w-[80%] bg-gray-100 m-2 rounded-xl border-2 border-gray-300"
-            value={formValue}
-            onChange={(e) => setFormValue(e.target.value)}
-            placeholder="Type your message"
-          />
-          <label htmlFor="file-upload" className="cursor-pointer my-4">
-            <GrAttachment className="text-2xl mx-2 bg-pink-500 w-12 h-12 rounded-md p-2 text-white hover:text-black hover:bg-yellow-300 transition duration-300 ease-in-out" />
-          </label>
-          <input
-            id="file-upload"
-            className="hidden"
-            type="file"
-            onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-          />
-          <button type="submit" disabled={!formValue && !file}>
-            <TbSend2 className="text-2xl mx-2 bg-pink-500 w-12 h-12 rounded-md p-2 text-white hover:text-black hover:bg-yellow-300 transition duration-300 ease-in-out" />
-          </button>
-        </form>
-      </div>
+      <MessageForm onSendMessage={sendMessage} />
     </div>
   );
 };
