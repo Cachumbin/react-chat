@@ -52,11 +52,7 @@ const ChatRoom: React.FC = () => {
   const messagesRef = collection(firestore, "messages").withConverter(
     messageConverter
   );
-  const query1: Query<MessageProps> = query(
-    messagesRef,
-    orderBy("createdAt"),
-    limit(25)
-  );
+  const query1: Query<MessageProps> = query(messagesRef, orderBy("createdAt"));
 
   const [messages, loading, error] = useCollectionData<MessageProps>(query1);
 
