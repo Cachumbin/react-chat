@@ -2,7 +2,6 @@ import {
   collection,
   query,
   orderBy,
-  limit,
   addDoc,
   serverTimestamp,
   DocumentData,
