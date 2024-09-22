@@ -20,6 +20,10 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSendMessage }) => {
     setFile(null);
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFile(e.target.files ? e.target.files[0] : null);
+  };
+
   return (
     <div className="flex flex-col">
       {file && (
@@ -39,7 +43,7 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSendMessage }) => {
           id="file-upload"
           className="hidden"
           type="file"
-          onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+          onChange={handleFileChange}
         />
         <button type="submit" disabled={!formValue.trim() && !file}>
           <TbSend2 className="text-2xl mx-2 bg-pink-500 w-12 h-12 rounded-md p-2 text-white hover:text-black hover:bg-yellow-300 transition duration-300 ease-in-out" />

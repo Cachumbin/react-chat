@@ -13,6 +13,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { auth, firestore } from "./firebaseConfig";
 import ChatMessage from "./ChatMessage";
 import MessageForm from "./MessageForm";
+import { useRef, useEffect } from "react";
 
 interface MessageProps {
   text: string;
@@ -48,6 +49,7 @@ const messageConverter: FirestoreDataConverter<MessageProps> = {
 };
 
 const ChatRoom: React.FC = () => {
+  const dummy = useRef<HTMLDivElement>(null);
   const messagesRef = collection(firestore, "messages").withConverter(
     messageConverter
   );
@@ -85,6 +87,12 @@ const ChatRoom: React.FC = () => {
     await addDoc(messagesRef, messageData);
   };
 
+  useEffect(() => {
+    if (dummy.current) {
+      dummy.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
@@ -95,6 +103,7 @@ const ChatRoom: React.FC = () => {
           messages.map((msg, index) => (
             <ChatMessage key={index} message={msg} />
           ))}
+        <div ref={dummy}></div>
       </div>
 
       <MessageForm onSendMessage={sendMessage} />
