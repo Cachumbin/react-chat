@@ -29,9 +29,9 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSendMessage }) => {
       {file && (
         <span className="bg-white text-sm text-gray-600 p-2">{file.name}</span>
       )}
-      <form className="w-2-xl flex bg-white p-2" onSubmit={handleSubmit}>
+      <form className="flex bg-white p-2" onSubmit={handleSubmit}>
         <input
-          className="w-[80%] bg-gray-100 m-2 rounded-xl border-2 border-gray-300"
+          className="flex-grow bg-gray-100 m-2 rounded-xl border-2 border-gray-300"
           value={formValue}
           onChange={(e) => setFormValue(e.target.value)}
           placeholder="Type your message"

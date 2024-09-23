@@ -98,7 +98,7 @@ const ChatRoom: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
-      <div className="flex-grow overflow-y-auto p-4 max-h-[calc(100vh-15rem)] overflow-y-auto">
+      <div className="flex-grow overflow-y-auto p-4 max-h-[calc(100vh-15rem)]">
         {messages &&
           messages.map((msg, index) => (
             <ChatMessage key={index} message={msg} />
@@ -107,7 +107,6 @@ const ChatRoom: React.FC = () => {
       </div>
 
       <MessageForm onSendMessage={sendMessage} />
-      <div className="h-96 bg-white"></div>
     </div>
   );
 };
