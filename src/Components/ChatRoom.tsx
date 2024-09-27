@@ -97,8 +97,8 @@ const ChatRoom: React.FC = () => {
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
-      <div className="flex-grow overflow-y-auto p-4 max-h-[calc(100vh-15rem)]">
+    <div className="flex flex-col h-[800px] overflow-hidden">
+      <div className="flex-grow overflow-y-auto p-4 h-[700px]]">
         {messages &&
           messages.map((msg, index) => (
             <ChatMessage key={index} message={msg} />

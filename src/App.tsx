@@ -14,7 +14,7 @@ const App = () => {
           <p className="m-6 text-2xl font-bold text-white">CachunChat</p>
           <SignOut />
         </header>
-        <section className="bg-gradient-to-br from-pink-100 to-yellow-100 flex flex-col flex-grow overflow-hidden">
+        <section className="bg-gradient-to-br from-pink-100 h-[800px] to-yellow-100 flex flex-col flex-grow overflow-hidden">
           {user ? <ChatRoom /> : <SignIn />}
         </section>
       </div>
