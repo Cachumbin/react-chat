@@ -20,10 +20,9 @@ const ChatMessage: React.FC<MessageProps> = ({ message }) => {
 
   const isSentByCurrentUser = uid === auth.currentUser?.uid;
 
-  const messageClass = isSentByCurrentUser
+  const messageAlignment = isSentByCurrentUser
     ? "flex-row-reverse"
-    : "justify-start";
-
+    : "flex-row";
   const backgroundColor = isSentByCurrentUser ? "bg-pink-500" : "bg-yellow-300";
   const textColor = isSentByCurrentUser ? "text-white" : "text-gray-800";
 
@@ -33,58 +32,82 @@ const ChatMessage: React.FC<MessageProps> = ({ message }) => {
     return `${(size / (1024 * 1024)).toFixed(2)} MB`;
   };
 
+  const getFileExtension = (url: string): string | null => {
+    try {
+      const pathname = new URL(url).pathname;
+      const ext = pathname.split(".").pop();
+      return ext ? ext.toLowerCase() : null;
+    } catch (error) {
+      const cleanedURL = url.split(/[?#]/)[0];
+      const ext = cleanedURL.split(".").pop();
+      return ext ? ext.toLowerCase() : null;
+    }
+  };
+
   const renderMedia = () => {
     if (!fileURL) return null;
 
-    const fileExtension = fileURL.split(".").pop()?.toLowerCase();
+    const fileExtension = getFileExtension(fileURL);
     if (!fileExtension) return null;
 
-    if (["jpeg", "jpg", "gif", "png"].includes(fileExtension)) {
-      return <img className="w-auto" src={fileURL} alt="Uploaded file" />;
-    } else if (["mp4", "webm", "ogg"].includes(fileExtension)) {
+    const imageExtensions = ["jpeg", "jpg", "gif", "png", "svg"];
+    const videoExtensions = ["mp4", "webm", "ogg"];
+    const audioExtensions = ["mp3", "wav", "ogg"];
+
+    if (audioExtensions.includes(fileExtension)) {
       return (
-        <video className="w-auto" controls>
-          <source src={fileURL} type={`video/${fileExtension}`} />
-          Your browser does not support the video tag.
-        </video>
-      );
-    } else if (["mp3", "wav", "ogg"].includes(fileExtension)) {
-      return (
-        <audio className="w-auto" controls>
+        <audio className="w-full mt-2" controls>
           <source src={fileURL} type={`audio/${fileExtension}`} />
           Your browser does not support the audio element.
         </audio>
       );
+    } else if (videoExtensions.includes(fileExtension)) {
+      return (
+        <video className="w-full mt-2" controls>
+          <source src={fileURL} type={`video/${fileExtension}`} />
+          Your browser does not support the video tag.
+        </video>
+      );
+    } else if (imageExtensions.includes(fileExtension)) {
+      return (
+        <img
+          className="w-full mt-2 rounded-md"
+          src={fileURL}
+          alt="Uploaded file"
+        />
+      );
     } else {
       return (
-        <div>
+        <div className="mt-2">
           <a
             href={fileURL}
             download={fileName}
             className="text-blue-500 underline"
           >
-            {fileName}
+            {fileName || "Download File"}
           </a>
-          <p className="text-gray-500">{formatFileSize(fileSize || 0)}</p>
+          {fileSize !== undefined && (
+            <p className="text-gray-500 text-sm">{formatFileSize(fileSize)}</p>
+          )}
         </div>
       );
     }
   };
 
   return (
-    <div className={`message ${messageClass} flex items-end`}>
+    <div className={`flex ${messageAlignment} items-end mb-4`}>
       {photoURL && (
         <img
-          className="w-10 h-10 m-2 my-4 rounded-xl"
+          className="w-10 h-10 m-2 rounded-full"
           src={photoURL}
           alt="User avatar"
         />
       )}
       <div
-        className={`${messageClass} flex flex-col ${backgroundColor} rounded-xl mx-2 my-4 p-2 ${textColor} max-w-xl`}
+        className={`${backgroundColor} ${textColor} rounded-xl mx-2 my-2 p-3 max-w-xl break-words`}
       >
-        <p className="font-bold mb-1">{displayName}</p>
-        <p className="w-auto break-words break-all">{text}</p>
+        {displayName && <p className="font-bold mb-1">{displayName}</p>}
+        {text && <p className="mb-2">{text}</p>}
         {renderMedia()}
       </div>
     </div>
