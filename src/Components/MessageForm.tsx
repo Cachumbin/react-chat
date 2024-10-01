@@ -31,7 +31,7 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSendMessage }) => {
       )}
       <form className="flex bg-white p-2" onSubmit={handleSubmit}>
         <input
-          className="flex-grow bg-gray-100 m-2 rounded-xl border-2 border-gray-300"
+          className="flex-grow px-4 bg-gray-100 m-2 rounded-xl border-2 border-gray-300"
           value={formValue}
           onChange={(e) => setFormValue(e.target.value)}
           placeholder="Type your message"
