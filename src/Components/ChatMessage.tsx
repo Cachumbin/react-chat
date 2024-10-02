@@ -33,6 +33,44 @@ const ChatMessage: React.FC<MessageProps> = ({ message }) => {
     return `${(size / (1024 * 1024)).toFixed(2)} MB`;
   };
 
+  const renderMedia = () => {
+    if (!fileURL) return null;
+
+    const fileExtension = fileURL.split(".").pop()?.toLowerCase();
+    if (!fileExtension) return null;
+
+    if (["jpeg", "jpg", "gif", "png"].includes(fileExtension)) {
+      return <img className="w-auto" src={fileURL} alt="Uploaded file" />;
+    } else if (["mp4", "webm", "ogg"].includes(fileExtension)) {
+      return (
+        <video className="w-auto" controls>
+          <source src={fileURL} type={`video/${fileExtension}`} />
+          Your browser does not support the video tag.
+        </video>
+      );
+    } else if (["mp3", "wav", "ogg"].includes(fileExtension)) {
+      return (
+        <audio className="w-auto" controls>
+          <source src={fileURL} type={`audio/${fileExtension}`} />
+          Your browser does not support the audio element.
+        </audio>
+      );
+    } else {
+      return (
+        <div>
+          <a
+            href={fileURL}
+            download={fileName}
+            className="text-blue-500 underline"
+          >
+            {fileName}
+          </a>
+          <p className="text-gray-500">{formatFileSize(fileSize || 0)}</p>
+        </div>
+      );
+    }
+  };
+
   return (
     <div className={`message ${messageClass} flex items-end`}>
       {photoURL && (
@@ -47,22 +85,7 @@ const ChatMessage: React.FC<MessageProps> = ({ message }) => {
       >
         <p className="font-bold mb-1">{displayName}</p>
         <p className="w-auto break-words break-all">{text}</p>
-        {fileURL && (
-          <div>
-            <a href={fileURL} target="_blank" rel="noopener noreferrer">
-              {fileURL.match(/\.(jpeg|jpg|gif|png)$/) ? (
-                <img className="w-auto" src={fileURL} alt="Uploaded file" />
-              ) : (
-                <div>
-                  <p className="text-blue-500 underline">{fileName}</p>
-                  <p className="text-gray-500">
-                    {formatFileSize(fileSize || 0)}
-                  </p>
-                </div>
-              )}
-            </a>
-          </div>
-        )}
+        {renderMedia()}
       </div>
     </div>
   );
