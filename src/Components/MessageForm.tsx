@@ -3,25 +3,37 @@ import { GrAttachment } from "react-icons/gr";
 import { TbSend2 } from "react-icons/tb";
 
 interface MessageFormProps {
-  onSendMessage: (message: string, file: File | null) => void;
+  onSendMessage: (
+    message: string,
+    file: File | null,
+    fileName: string | null,
+    fileSize: number | null
+  ) => void;
 }
 
 const MessageForm: React.FC<MessageFormProps> = ({ onSendMessage }) => {
   const [formValue, setFormValue] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [fileSize, setFileSize] = useState<number | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (formValue.trim() === "" && !file) {
       return;
     }
-    onSendMessage(formValue, file);
+    onSendMessage(formValue, file, fileName, fileSize);
     setFormValue("");
     setFile(null);
+    setFileName(null);
+    setFileSize(null);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(e.target.files ? e.target.files[0] : null);
+    const selectedFile = e.target.files ? e.target.files[0] : null;
+    setFile(selectedFile);
+    setFileName(selectedFile ? selectedFile.name : null);
+    setFileSize(selectedFile ? selectedFile.size : null);
   };
 
   return (
