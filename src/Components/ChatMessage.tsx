@@ -9,23 +9,29 @@ interface MessageProps {
     createdAt?: any;
     displayName?: string;
     fileURL?: string;
+    fileName?: string;
+    fileSize?: number;
   };
 }
 
 const ChatMessage: React.FC<MessageProps> = ({ message }) => {
-  const { text, uid, photoURL, displayName, fileURL } = message;
+  const { text, uid, photoURL, displayName, fileURL, fileName, fileSize } =
+    message;
 
-  // Determine if the message is sent by the current user
   const isSentByCurrentUser = uid === auth.currentUser?.uid;
 
-  // Class for the message alignment
   const messageClass = isSentByCurrentUser
     ? "flex-row-reverse"
     : "justify-start";
 
-  // Conditional classes for sent vs received messages
   const backgroundColor = isSentByCurrentUser ? "bg-pink-500" : "bg-yellow-300";
   const textColor = isSentByCurrentUser ? "text-white" : "text-gray-800";
+
+  const formatFileSize = (size: number) => {
+    if (size < 1024) return `${size} bytes`;
+    if (size < 1024 * 1024) return `${(size / 1024).toFixed(2)} KB`;
+    return `${(size / (1024 * 1024)).toFixed(2)} MB`;
+  };
 
   return (
     <div className={`message ${messageClass} flex items-end`}>
@@ -44,7 +50,16 @@ const ChatMessage: React.FC<MessageProps> = ({ message }) => {
         {fileURL && (
           <div>
             <a href={fileURL} target="_blank" rel="noopener noreferrer">
-              <img className="w-auto" src={fileURL} alt="Uploaded file" />
+              {fileURL.match(/\.(jpeg|jpg|gif|png)$/) ? (
+                <img className="w-auto" src={fileURL} alt="Uploaded file" />
+              ) : (
+                <div>
+                  <p className="text-blue-500 underline">{fileName}</p>
+                  <p className="text-gray-500">
+                    {formatFileSize(fileSize || 0)}
+                  </p>
+                </div>
+              )}
             </a>
           </div>
         )}

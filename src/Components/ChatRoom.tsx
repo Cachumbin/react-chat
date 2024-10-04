@@ -22,6 +22,8 @@ interface MessageProps {
   photoURL: string;
   displayName: string;
   fileURL?: string;
+  fileName?: string;
+  fileSize?: number;
 }
 
 const messageConverter: FirestoreDataConverter<MessageProps> = {
@@ -33,6 +35,8 @@ const messageConverter: FirestoreDataConverter<MessageProps> = {
       photoURL: message.photoURL,
       displayName: message.displayName,
       fileURL: message.fileURL || null,
+      fileName: message.fileName || null,
+      fileSize: message.fileSize || null,
     };
   },
   fromFirestore(snapshot): MessageProps {
@@ -44,6 +48,8 @@ const messageConverter: FirestoreDataConverter<MessageProps> = {
       photoURL: data.photoURL,
       displayName: data.displayName,
       fileURL: data.fileURL || null,
+      fileName: data.fileName || null,
+      fileSize: data.fileSize || null,
     };
   },
 };
@@ -57,7 +63,12 @@ const ChatRoom: React.FC = () => {
 
   const [messages, loading, error] = useCollectionData<MessageProps>(query1);
 
-  const sendMessage = async (message: string, file: File | null) => {
+  const sendMessage = async (
+    message: string,
+    file: File | null,
+    fileName: string | null,
+    fileSize: number | null
+  ) => {
     const { uid, photoURL, displayName } = auth.currentUser!;
 
     let fileURL = null;
@@ -69,7 +80,6 @@ const ChatRoom: React.FC = () => {
     }
 
     const safePhotoURL = photoURL || "";
-
     const safeDisplayName = displayName || undefined;
 
     const messageData: Partial<MessageProps> = {
@@ -78,11 +88,10 @@ const ChatRoom: React.FC = () => {
       uid,
       photoURL: safePhotoURL,
       displayName: safeDisplayName,
+      fileURL: fileURL || undefined,
+      fileName: fileName || undefined,
+      fileSize: fileSize || undefined,
     };
-
-    if (fileURL) {
-      messageData.fileURL = fileURL;
-    }
 
     await addDoc(messagesRef, messageData);
   };
@@ -98,7 +107,7 @@ const ChatRoom: React.FC = () => {
 
   return (
     <div className="flex flex-col h-[800px] overflow-hidden">
-      <div className="flex-grow overflow-y-auto p-4 h-[800px]]">
+      <div className="flex-grow overflow-y-auto p-4 h-[800px]">
         {messages &&
           messages.map((msg, index) => (
             <ChatMessage key={index} message={msg} />
