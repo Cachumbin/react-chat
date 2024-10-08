@@ -11,6 +11,7 @@ const App = () => {
     <div className="flex justify-center h-[850px] overflow-hidden">
       <div className="mx-8 max-w-2xl flex flex-col h-full overflow-hidden">
         <header className="bg-gradient-to-r from-pink-500 to-yellow-500 flex justify-between">
+          <img src="/public/Recurso 1.png" alt="" className="w-20 h-20 p-2" />
           <p className="m-6 text-2xl font-bold text-white">CachunChat</p>
           <SignOut />
         </header>
