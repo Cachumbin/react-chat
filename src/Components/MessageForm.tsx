@@ -42,8 +42,8 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSendMessage }) => {
         <span className="bg-white text-sm text-gray-600 p-2">{file.name}</span>
       )}
       <form className="flex flex-row bg-white p-2" onSubmit={handleSubmit}>
-        <label htmlFor="file-upload" className="cursor-pointer">
-          <GrAttachment className="text-2xl mx-1 bg-pink-500 w-8 h-8 rounded-md p-1 text-white hover:text-black hover:bg-yellow-300 transition duration-300 ease-in-out sm:w-12 sm:h-12 sm:mx-2 sm:p-2" />
+        <label htmlFor="file-upload" className="cursor-pointer sm:my-4">
+          <GrAttachment className="text-2xl bg-pink-500 w-8 h-8 rounded-md p-1 text-white hover:text-black hover:bg-yellow-300 transition duration-300 ease-in-out sm:w-12 sm:h-12 sm:mx-2 sm:p-2" />
         </label>
         <input
           id="file-upload"
@@ -52,7 +52,7 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSendMessage }) => {
           onChange={handleFileChange}
         />
         <input
-          className="flex-grow px-4 bg-gray-100 mx-2 rounded-xl border-2 border-gray-300 h-8 sm:h-12 sm:mx-4 sm:my-4"
+          className="flex-grow px-4 bg-gray-100 mx-1 rounded-xl border-2 border-gray-300 h-8 sm:h-12 sm:mx-4 sm:my-4"
           value={formValue}
           onChange={(e) => setFormValue(e.target.value)}
           placeholder="Type your message"
@@ -62,7 +62,7 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSendMessage }) => {
           disabled={!formValue.trim() && !file}
           className=""
         >
-          <TbSend2 className="text-2xl mx-1 bg-pink-500 w-8 h-8 rounded-md p-1 text-white hover:text-black hover:bg-yellow-300 transition duration-300 ease-in-out sm:w-12 sm:h-12 sm:mx-2 sm:p-2" />
+          <TbSend2 className="text-2xl bg-pink-500 w-8 h-8 rounded-md p-1 text-white hover:text-black hover:bg-yellow-300 transition duration-300 ease-in-out sm:w-12 sm:h-12 sm:mx-2 sm:p-2" />
         </button>
       </form>
     </div>
