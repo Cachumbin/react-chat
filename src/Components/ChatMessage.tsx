@@ -104,7 +104,7 @@ const ChatMessage: React.FC<MessageProps> = ({ message }) => {
         />
       )}
       <div
-        className={`${backgroundColor} ${textColor} rounded-xl mx-2 my-2 p-3 max-w-xl break-words`}
+        className={`${backgroundColor} ${textColor} rounded-xl mx-2 my-2 p-3 w-[240px] sm:max-w-xl break-words`}
       >
         {displayName && <p className="font-bold mb-1">{displayName}</p>}
         {text && <p className="mb-2">{text}</p>}
