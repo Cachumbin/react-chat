@@ -50,6 +50,7 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSendMessage }) => {
           className="hidden"
           type="file"
           onChange={handleFileChange}
+          aria-label="attachment"
         />
         <input
           className="flex-grow px-4 bg-gray-100 mx-1 rounded-xl border-2 border-gray-300 h-8 sm:h-12 sm:mx-4 sm:my-4"
@@ -61,6 +62,7 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSendMessage }) => {
           type="submit"
           disabled={!formValue.trim() && !file}
           className=""
+          aria-label="button-submit"
         >
           <TbSend2 className="text-2xl bg-pink-500 w-8 h-8 rounded-md p-1 text-white hover:text-black hover:bg-yellow-300 transition duration-300 ease-in-out sm:w-12 sm:h-12 sm:mx-2 sm:p-2" />
         </button>
