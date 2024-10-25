@@ -56,7 +56,7 @@ const ChatMessage: React.FC<MessageProps> = ({ message }) => {
 
     if (audioExtensions.includes(fileExtension)) {
       return (
-        <audio className="w-full mt-2" controls>
+        <audio className="w-full mt-2" controls title="audio">
           <source src={fileURL} type={`audio/${fileExtension}`} />
           Your browser does not support the audio element.
         </audio>
