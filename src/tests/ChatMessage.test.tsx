@@ -67,7 +67,7 @@ describe("ChatMessage Accessibility Tests", () => {
       fileName: "audio.mp3",
     };
     rerender(<ChatMessage message={audioMessage} />);
-    const audio = screen.getByRole("audio");
+    const audio = screen.getByTitle("audio");
     expect(audio).toBeInTheDocument();
   });
 
