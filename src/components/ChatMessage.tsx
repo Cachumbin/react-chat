@@ -1,20 +1,21 @@
-import React from "react";
 import { auth } from "./firebaseConfig";
 
-interface MessageProps {
-  message: {
-    text: string;
-    uid: string;
-    photoURL?: string;
-    createdAt?: any;
-    displayName?: string;
-    fileURL?: string;
-    fileName?: string;
-    fileSize?: number;
-  };
+interface Message {
+  text: string;
+  uid: string;
+  photoURL?: string;
+  createdAt?: any;
+  displayName?: string;
+  fileURL?: string;
+  fileName?: string;
+  fileSize?: number;
 }
 
-const ChatMessage: React.FC<MessageProps> = ({ message }) => {
+interface MessageProps {
+  message: Message;
+}
+
+const ChatMessage: React.FC<MessageProps> = ({ message }: MessageProps) => {
   const { text, uid, photoURL, displayName, fileURL, fileName, fileSize } =
     message;
 

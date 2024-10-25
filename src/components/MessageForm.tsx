@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { GrAttachment } from "react-icons/gr";
 import { TbSend2 } from "react-icons/tb";
 
