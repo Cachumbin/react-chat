@@ -1,5 +1,7 @@
 import { signOut } from "firebase/auth";
-import { auth } from "./firebaseConfig";
+import { initializeFirebaseApp } from "./firebaseConfig";
+
+const { auth } = initializeFirebaseApp();
 
 const SignOut = () => {
   return (

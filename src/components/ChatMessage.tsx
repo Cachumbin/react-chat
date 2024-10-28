@@ -1,5 +1,6 @@
-import { auth } from "./firebaseConfig";
+import { initializeFirebaseApp } from "./firebaseConfig";
 
+const { auth } = initializeFirebaseApp();
 interface Message {
   text: string;
   uid: string;

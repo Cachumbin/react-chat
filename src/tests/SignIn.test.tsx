@@ -1,14 +1,19 @@
+import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "../components/firebaseConfig";
 import SignIn from "../components/SignIn";
 
 jest.mock("firebase/auth", () => ({
   GoogleAuthProvider: jest.fn(),
   signInWithPopup: jest.fn(),
+  getAuth: jest.fn(),
 }));
 
 describe("SignIn component", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("renders the Google sign-in button with accessible text", () => {
     render(<SignIn />);
     const signInButton = screen.getByRole("button", {
@@ -29,8 +34,9 @@ describe("SignIn component", () => {
       name: /sign in with google/i,
     });
     fireEvent.click(signInButton);
+
     expect(signInWithPopup).toHaveBeenCalledWith(
-      auth,
+      expect.any(Object),
       expect.any(GoogleAuthProvider)
     );
   });

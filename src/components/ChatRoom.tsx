@@ -10,10 +10,12 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { auth, firestore } from "./firebaseConfig";
+import { initializeFirebaseApp } from "./firebaseConfig";
 import ChatMessage from "./ChatMessage";
 import MessageForm from "./MessageForm";
 import { useRef, useEffect } from "react";
+
+const { auth, firestore } = initializeFirebaseApp();
 
 interface MessageProps {
   text: string;
