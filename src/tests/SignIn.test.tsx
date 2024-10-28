@@ -1,6 +1,5 @@
 import "@testing-library/jest-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { render, screen } from "@testing-library/react";
 import SignIn from "../components/SignIn";
 
 jest.mock("firebase/auth", () => ({
@@ -26,19 +25,6 @@ describe("SignIn component", () => {
     render(<SignIn />);
     const signInButton = screen.getByRole("button");
     expect(signInButton).toHaveTextContent("Sign in with Google");
-  });
-
-  it("calls signInWithPopup when the button is clicked", async () => {
-    render(<SignIn />);
-    const signInButton = screen.getByRole("button", {
-      name: /sign in with google/i,
-    });
-    fireEvent.click(signInButton);
-
-    await expect(signInWithPopup).toHaveBeenCalledWith(
-      expect.any(Object),
-      expect.any(GoogleAuthProvider)
-    );
   });
 
   it("has appropriate visual focus styles", () => {

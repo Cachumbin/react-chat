@@ -4,9 +4,13 @@ import { initializeFirebaseApp } from "./firebaseConfig";
 const { auth } = initializeFirebaseApp();
 
 const SignIn = () => {
-  const signInWithGoogle = () => {
+  const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider);
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+    }
   };
 
   return (
