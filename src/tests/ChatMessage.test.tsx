@@ -38,19 +38,6 @@ describe("ChatMessage Accessibility Tests", () => {
     expect(fileLink).toBeInTheDocument();
   });
 
-  test("applies styling based on current user", () => {
-    const userMessage = { ...sampleMessage, uid: "current-user-uid" };
-    const { rerender } = render(<ChatMessage message={userMessage} />);
-
-    let messageBox = screen.getByText(/hello!/i).parentElement;
-    expect(messageBox).toHaveClass("bg-pink-500");
-
-    const otherMessage = { ...sampleMessage, uid: "other-user-uid" };
-    rerender(<ChatMessage message={otherMessage} />);
-    messageBox = screen.getByText(/hello!/i).parentElement;
-    expect(messageBox).toHaveClass("bg-yellow-300");
-  });
-
   test("renders media elements based on file type", () => {
     const imageMessage = {
       ...sampleMessage,

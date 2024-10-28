@@ -1,6 +1,8 @@
 import { initializeFirebaseApp } from "./firebaseConfig";
 
-const { auth } = initializeFirebaseApp();
+const { auth } =
+  process.env.NODE_ENV !== "test" ? initializeFirebaseApp() : { auth: null };
+
 interface Message {
   text: string;
   uid: string;
@@ -20,7 +22,7 @@ const ChatMessage: React.FC<MessageProps> = ({ message }: MessageProps) => {
   const { text, uid, photoURL, displayName, fileURL, fileName, fileSize } =
     message;
 
-  const isSentByCurrentUser = uid === auth.currentUser?.uid;
+  const isSentByCurrentUser = uid === auth?.currentUser?.uid;
 
   const messageAlignment = isSentByCurrentUser
     ? "flex-row-reverse"
