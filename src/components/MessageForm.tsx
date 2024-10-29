@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { GrAttachment } from "react-icons/gr";
 import { TbSend2 } from "react-icons/tb";
+import { AiFillDelete } from "react-icons/ai";
 
 interface MessageFormProps {
   onSendMessage: (
@@ -39,7 +40,17 @@ const MessageForm: React.FC<MessageFormProps> = ({ onSendMessage }) => {
   return (
     <div className="flex flex-col">
       {file && (
-        <span className="bg-white text-sm text-gray-600 p-2">{file.name}</span>
+        <span className="bg-white text-sm text-gray-600 p-2 flex justify-between">
+          <p>{file.name}</p>
+          <button
+            onClick={() => {
+              setFile(null);
+            }}
+            className="bg-gray-300 w-6 flex justify-center items-center h-6 rounded-md"
+          >
+            <AiFillDelete />
+          </button>
+        </span>
       )}
       <form className="flex flex-row bg-white p-2" onSubmit={handleSubmit}>
         <label htmlFor="file-upload" className="cursor-pointer sm:my-4">
