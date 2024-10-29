@@ -84,6 +84,7 @@ const ChatMessage: React.FC<MessageProps> = ({ message }: MessageProps) => {
       return (
         <div className="mt-2">
           <a
+            target="_blank"
             href={fileURL}
             download={fileName}
             className="text-blue-500 underline"
